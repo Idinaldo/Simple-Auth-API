@@ -47,4 +47,8 @@ public class Identity {
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
+
+    public String toString() {
+        return "username=" + this.username + " password=" + this.passwordHash + " id=" + this.id;
+    }
 }
