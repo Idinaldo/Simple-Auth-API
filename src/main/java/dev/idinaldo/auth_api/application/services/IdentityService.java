@@ -6,6 +6,8 @@ import dev.idinaldo.auth_api.domain.models.Identity;
 import dev.idinaldo.auth_api.ports.IdentityRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class IdentityService implements ClientRegisterUseCase {
 
@@ -16,7 +18,7 @@ public class IdentityService implements ClientRegisterUseCase {
     }
 
     @Override
-    public void registerClient(Identity identity) {
-        this.identityRepository.save(identity);
+    public UUID registerClient(Identity identity) {
+        return this.identityRepository.save(identity);
     }
 }
