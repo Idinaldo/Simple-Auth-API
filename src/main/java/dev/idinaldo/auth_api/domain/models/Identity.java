@@ -49,6 +49,6 @@ public class Identity {
     }
 
     public String toString() {
-        return "username=" + this.username + " password=" + this.passwordHash + " id=" + this.id;
+        return "username=" + this.username + " id=" + this.id;
     }
 }
