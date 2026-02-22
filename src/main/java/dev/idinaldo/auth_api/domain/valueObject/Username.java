@@ -11,8 +11,11 @@ public record Username(String value) {
         throw new InvalidUsernameException();
     }
 
-
     private boolean isValid(String value) {
         return value.matches("\\w{6,16}");
+    }
+
+    public String getValue() {
+        return this.value;
     }
 }
