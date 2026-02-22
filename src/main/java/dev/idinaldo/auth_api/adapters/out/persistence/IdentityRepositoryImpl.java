@@ -6,6 +6,8 @@ import dev.idinaldo.auth_api.infrastructure.mappers.IdentityMapper;
 import dev.idinaldo.auth_api.ports.IdentityRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class IdentityRepositoryImpl implements IdentityRepository {
 
@@ -18,8 +20,8 @@ public class IdentityRepositoryImpl implements IdentityRepository {
     }
 
     @Override
-    public void save(Identity identity) {
+    public UUID save(Identity identity) {
         JpaIdentity jpaIdentity = this.identityMapper.domainToEntity(identity);
-        this.identityJpaRepository.save(jpaIdentity);
+        return this.identityJpaRepository.save(jpaIdentity).getId();
     }
 }
