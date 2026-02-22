@@ -1,20 +1,22 @@
 package dev.idinaldo.auth_api.domain.models;
 
+import dev.idinaldo.auth_api.domain.valueObject.Username;
+
 import java.util.UUID;
 
 public class Identity {
 
     private UUID id;
-    private String username;
+    private Username username;
     private String passwordHash;
 
-    public Identity(UUID id, String username, String passwordHash) {
+    public Identity(UUID id, Username username, String passwordHash) {
         this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
     }
 
-    public Identity(String username, String passwordHash) {
+    public Identity(Username username, String passwordHash) {
         this.username = username;
         this.passwordHash = passwordHash;
     }
@@ -30,11 +32,11 @@ public class Identity {
         this.id = id;
     }
 
-    public String getUsername() {
+    public Username getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(Username username) {
         this.username = username;
     }
 
