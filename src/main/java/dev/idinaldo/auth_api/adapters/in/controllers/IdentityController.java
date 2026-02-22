@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -28,7 +30,7 @@ public class IdentityController {
     @PostMapping("/register")
     public ResponseEntity<String> registerClient(@RequestBody @Valid ClientIdentityRegisterDTO identityRegisterDTO) {
         Identity identity = this.identityMapper.registerDtoToDomain(identityRegisterDTO);
-        this.identityService.registerClient(identity);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Credentials Saved Successfully");
+        UUID id = this.identityService.registerClient(identity);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Credentials registered successfully with ID: " + id);
     }
 }
