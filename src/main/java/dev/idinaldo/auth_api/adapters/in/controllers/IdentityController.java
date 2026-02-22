@@ -5,16 +5,13 @@ import dev.idinaldo.auth_api.application.services.IdentityService;
 import dev.idinaldo.auth_api.domain.models.Identity;
 import dev.idinaldo.auth_api.infrastructure.mappers.IdentityMapper;
 import jakarta.validation.Valid;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,7 +28,6 @@ public class IdentityController {
     @PostMapping("/register")
     public ResponseEntity<String> registerClient(@RequestBody @Valid ClientIdentityRegisterDTO identityRegisterDTO) {
         Identity identity = this.identityMapper.registerDtoToDomain(identityRegisterDTO);
-        System.out.println("Identity: " + identity.toString());
         this.identityService.registerClient(identity);
         return ResponseEntity.status(HttpStatus.CREATED).body("Credentials Saved Successfully");
     }
