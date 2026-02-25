@@ -1,6 +1,6 @@
 package dev.idinaldo.auth_api.infrastructure.mappers;
 
-import dev.idinaldo.auth_api.adapters.in.dtos.ClientIdentityRegisterDTO;
+import dev.idinaldo.auth_api.adapters.in.dtos.IdentityRequestDTO;
 import dev.idinaldo.auth_api.domain.models.Identity;
 import dev.idinaldo.auth_api.infrastructure.entities.JpaIdentity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,21 +15,26 @@ public class IdentityMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Identity requestDtoToDomain(IdentityRequestDTO identityRegisterDTO) {
+        return new Identity(identityRegisterDTO.username(), identityRegisterDTO.password());
+    }
+
     public JpaIdentity domainToEntity(Identity identity) {
         JpaIdentity jpaIdentity = new JpaIdentity();
 
         jpaIdentity.setUsername(identity.getUsername().getValue());
-        jpaIdentity.setPasswordHash(identity.getPasswordHash());
+        jpaIdentity.setPasswordHash(this.passwordEncoder.encode(identity.getPassword()));
 
         return jpaIdentity;
     }
 
-    public Identity registerDtoToDomain(ClientIdentityRegisterDTO identityRegisterDTO) {
+    public Identity entityToDomain(JpaIdentity jpaIdentity) {
         Identity identity = new Identity();
 
-        identity.setUsername(identityRegisterDTO.username());
-        identity.setPasswordHash(passwordEncoder.encode(identityRegisterDTO.password()));
+        identity.setId(jpaIdentity.getId());
+        identity.setUsernameFromString(jpaIdentity.getUsername());
 
         return identity;
     }
+
 }
