@@ -24,4 +24,10 @@ public class IdentityRepositoryImpl implements IdentityRepository {
         JpaIdentity jpaIdentity = this.identityMapper.domainToEntity(identity);
         return this.identityJpaRepository.save(jpaIdentity).getId();
     }
+
+    @Override
+    public Identity findByUsername(String username) {
+        JpaIdentity jpaIdentity = this.identityJpaRepository.findByUsername(username);
+        return this.identityMapper.entityToDomain(jpaIdentity);
+    }
 }
