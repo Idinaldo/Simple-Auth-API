@@ -4,25 +4,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import dev.idinaldo.auth_api.infrastructure.exceptions.InvalidUsernameException;
 
-public record Username(String username) {
+public record Username(String value) {
+
 
     @JsonCreator
-    public Username(String username) {
-        if (this.isValid(username)) {
-            this.username = username;
+    public Username(String value) {
+        if (this.isValid(value)) {
+            this.value = value;
         } else {
             throw new InvalidUsernameException();
         }
     }
 
     private boolean isValid(String value) {
-        System.out.println("[" + value + "]");
-        System.out.println(value.matches("\\w{6,16}"));
         return value.matches("\\w{6,16}");
     }
 
     @JsonValue
     public String getValue() {
-        return this.username;
+        return this.value;
     }
 }
