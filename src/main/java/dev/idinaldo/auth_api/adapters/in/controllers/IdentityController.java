@@ -1,6 +1,6 @@
 package dev.idinaldo.auth_api.adapters.in.controllers;
 
-import dev.idinaldo.auth_api.adapters.in.dtos.ClientIdentityRegisterDTO;
+import dev.idinaldo.auth_api.adapters.in.dtos.IdentityRequestDTO;
 import dev.idinaldo.auth_api.application.services.IdentityService;
 import dev.idinaldo.auth_api.domain.models.Identity;
 import dev.idinaldo.auth_api.infrastructure.mappers.IdentityMapper;
@@ -28,9 +28,16 @@ public class IdentityController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerClient(@RequestBody @Valid ClientIdentityRegisterDTO identityRegisterDTO) {
-        Identity identity = this.identityMapper.registerDtoToDomain(identityRegisterDTO);
+    public ResponseEntity<String> registerClient(@RequestBody @Valid IdentityRequestDTO identityRegisterDTO) {
+        Identity identity = this.identityMapper.requestDtoToDomain(identityRegisterDTO);
         UUID id = this.identityService.registerClient(identity);
         return ResponseEntity.status(HttpStatus.CREATED).body("Credentials registered successfully with ID: " + id);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<String> signIn(@RequestBody @Valid IdentityRequestDTO identityRequestDTO) {
+        Identity identity = this.identityMapper.requestDtoToDomain(identityRequestDTO);
+        String token = this.identityService.signIn(identity);
+        return ResponseEntity.ok(token);
     }
 }
