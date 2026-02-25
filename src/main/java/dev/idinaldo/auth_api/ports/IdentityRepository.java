@@ -8,4 +8,5 @@ import java.util.UUID;
 @Repository
 public interface IdentityRepository {
     UUID save(Identity identity);
+    Identity findByUsername(String username);
 }
