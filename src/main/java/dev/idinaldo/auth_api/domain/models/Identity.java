@@ -8,17 +8,17 @@ public class Identity {
 
     private UUID id;
     private Username username;
-    private String passwordHash;
+    private String password;
 
-    public Identity(UUID id, Username username, String passwordHash) {
+    public Identity(UUID id, Username username, String password) {
         this.id = id;
         this.username = username;
-        this.passwordHash = passwordHash;
+        this.password = password;
     }
 
-    public Identity(Username username, String passwordHash) {
+    public Identity(Username username, String password) {
         this.username = username;
-        this.passwordHash = passwordHash;
+        this.password = password;
     }
 
     public Identity() {
@@ -36,16 +36,20 @@ public class Identity {
         return username;
     }
 
+    public void setUsernameFromString(String username) {
+        this.username = new Username(username);
+    }
+
     public void setUsername(Username username) {
         this.username = username;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String toString() {
