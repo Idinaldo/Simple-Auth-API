@@ -5,6 +5,7 @@ import dev.idinaldo.auth_api.application.services.IdentityService;
 import dev.idinaldo.auth_api.domain.models.Identity;
 import dev.idinaldo.auth_api.infrastructure.mappers.IdentityMapper;
 import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,9 +36,8 @@ public class IdentityController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signIn(@RequestBody @Valid IdentityRequestDTO identityRequestDTO) {
+    public ResponseEntity<String> signIn(@RequestBody @Valid IdentityRequestDTO identityRequestDTO) throws BadRequestException {
         Identity identity = this.identityMapper.requestDtoToDomain(identityRequestDTO);
-        String token = this.identityService.signIn(identity);
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(this.identityService.signIn(identity));
     }
 }
