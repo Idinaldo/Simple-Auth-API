@@ -3,7 +3,7 @@ package dev.idinaldo.auth_api.adapters.in.controllers;
 import dev.idinaldo.auth_api.adapters.in.dtos.IdentityRequestDTO;
 import dev.idinaldo.auth_api.application.services.IdentityService;
 import dev.idinaldo.auth_api.domain.models.Identity;
-import dev.idinaldo.auth_api.infrastructure.mappers.IdentityMapper;
+import dev.idinaldo.auth_api.infrastructure.mappers.IdentityMapperFacade;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -21,9 +21,9 @@ import java.util.UUID;
 public class IdentityController {
 
     private final IdentityService identityService;
-    private final IdentityMapper identityMapper;
+    private final IdentityMapperFacade identityMapper;
 
-    public IdentityController(IdentityService identityService, IdentityMapper identityMapper) {
+    public IdentityController(IdentityService identityService, IdentityMapperFacade identityMapper) {
         this.identityService = identityService;
         this.identityMapper = identityMapper;
     }
@@ -37,7 +37,6 @@ public class IdentityController {
 
     @PostMapping("/signin")
     public ResponseEntity<String> signIn(@RequestBody @Valid IdentityRequestDTO identityRequestDTO) throws BadRequestException {
-        Identity identity = this.identityMapper.requestDtoToDomain(identityRequestDTO);
-        return ResponseEntity.ok(this.identityService.signIn(identity));
+        return ResponseEntity.ok(this.identityService.signIn(identityRequestDTO));
     }
 }
