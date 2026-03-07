@@ -1,17 +1,17 @@
 package dev.idinaldo.auth_api.application.services;
 
+import dev.idinaldo.auth_api.adapters.in.dtos.IdentityRequestDTO;
 import dev.idinaldo.auth_api.application.usecases.ClientRegisterUseCase;
 import dev.idinaldo.auth_api.application.usecases.SignInUseCase;
 import dev.idinaldo.auth_api.domain.models.Identity;
-import dev.idinaldo.auth_api.infrastructure.entities.JpaIdentity;
 import dev.idinaldo.auth_api.ports.IdentityRepository;
 import dev.idinaldo.auth_api.ports.JwtGenerator;
 import org.apache.coyote.BadRequestException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,6 +21,7 @@ public class IdentityService implements ClientRegisterUseCase, SignInUseCase {
     private final JwtGenerator jwtGenerator;
     private final PasswordEncoder passwordEncoder;
     private final String SIGN_IN_ERROR_MESSAGE = "Please verify your request.";
+    private final Logger logger = LoggerFactory.getLogger(IdentityService.class);
 
     public IdentityService(IdentityRepository identityRepository, JwtGenerator jwtGenerator, PasswordEncoder passwordEncoder) {
         this.identityRepository = identityRepository;
@@ -34,17 +35,10 @@ public class IdentityService implements ClientRegisterUseCase, SignInUseCase {
     }
 
     @Override
-    public String signIn(Identity identity) throws BadRequestException {
-
-        // verificar se o usuário está cadastrado
-        Identity persistedIdentity = identityRepository.findByUsername(identity.getUsername().getValue())
-                .orElseThrow(() -> new BadRequestException(SIGN_IN_ERROR_MESSAGE));
-        // verificar se a senha está correta
-        if (passwordEncoder.matches(identity.getPassword(), persistedIdentity.getPassword())) {
-            // gerar e retornar JWT
+    public String signIn(IdentityRequestDTO identityRequestDTO) throws BadRequestException {
+        Identity persistedIdentity = identityRepository.findByUsername(identityRequestDTO.username());
+        if (passwordEncoder.matches(identityRequestDTO.password(), persistedIdentity.getPasswordHash())) {
             return this.jwtGenerator.generateToken(persistedIdentity);
-        } else {
-            throw new BadRequestException(SIGN_IN_ERROR_MESSAGE);
-        }
+        } else throw new BadRequestException(SIGN_IN_ERROR_MESSAGE);
     }
 }
