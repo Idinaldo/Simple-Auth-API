@@ -6,7 +6,7 @@ public class WeakPasswordException extends RuntimeException {
         super("Please make sure your password is at least 6-characters long and contains letters, numbers and special symbols.");
     }
 
-    public  WeakPasswordException(String message) {
+    public WeakPasswordException(String message) {
         super(message);
     }
 }
