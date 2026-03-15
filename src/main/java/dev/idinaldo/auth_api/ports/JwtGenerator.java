@@ -6,4 +6,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface JwtGenerator {
     String generateToken(Identity identity);
+    String validateToken(String token);
 }
