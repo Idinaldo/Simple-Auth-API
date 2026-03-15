@@ -1,6 +1,8 @@
 package dev.idinaldo.auth_api.application.services;
 
 import dev.idinaldo.auth_api.adapters.in.dtos.IdentityRequestDTO;
+import dev.idinaldo.auth_api.adapters.out.dtos.RegisterResponseDTO;
+import dev.idinaldo.auth_api.adapters.out.dtos.SignInResponseDTO;
 import dev.idinaldo.auth_api.application.usecases.ClientRegisterUseCase;
 import dev.idinaldo.auth_api.application.usecases.SignInUseCase;
 import dev.idinaldo.auth_api.domain.models.Identity;
@@ -20,7 +22,7 @@ public class IdentityService implements ClientRegisterUseCase, SignInUseCase {
     private final IdentityRepository identityRepository;
     private final JwtGenerator jwtGenerator;
     private final PasswordEncoder passwordEncoder;
-    private final String SIGN_IN_ERROR_MESSAGE = "Please verify your request.";
+    private final String DEFAULT_ERROR_MESSAGE = "Please verify your request.";
     private final Logger logger = LoggerFactory.getLogger(IdentityService.class);
 
     public IdentityService(IdentityRepository identityRepository, JwtGenerator jwtGenerator, PasswordEncoder passwordEncoder) {
@@ -30,15 +32,17 @@ public class IdentityService implements ClientRegisterUseCase, SignInUseCase {
     }
 
     @Override
-    public UUID registerClient(Identity identity) {
-        return this.identityRepository.save(identity);
+    public RegisterResponseDTO registerClient(Identity identity) {
+        return new RegisterResponseDTO(this.identityRepository.save(identity));
     }
 
     @Override
-    public String signIn(IdentityRequestDTO identityRequestDTO) throws BadRequestException {
+    public SignInResponseDTO signIn(IdentityRequestDTO identityRequestDTO) throws BadRequestException {
         Identity persistedIdentity = identityRepository.findByUsername(identityRequestDTO.username());
+        logger.debug("User found");
         if (passwordEncoder.matches(identityRequestDTO.password(), persistedIdentity.getPasswordHash())) {
-            return this.jwtGenerator.generateToken(persistedIdentity);
-        } else throw new BadRequestException(SIGN_IN_ERROR_MESSAGE);
+            logger.debug("PW matches");
+            return new SignInResponseDTO(this.jwtGenerator.generateToken(persistedIdentity));
+        } else throw new BadRequestException(DEFAULT_ERROR_MESSAGE);
     }
 }
