@@ -2,16 +2,17 @@ package dev.idinaldo.auth_api.domain.models;
 
 import dev.idinaldo.auth_api.domain.valueObject.RoleName;
 
+import java.util.List;
 import java.util.UUID;
 
 public class Identity {
 
     private UUID id;
     private String username;
-    private RoleName[] roles = {RoleName.CUSTOMER}; // default value
+    private List<RoleName> roles = List.of(RoleName.CUSTOMER); // default value
     private String passwordHash;
 
-    public Identity(UUID id, String username, RoleName[] roles, String passwordHash) {
+    public Identity(UUID id, String username, List<RoleName> roles, String passwordHash) {
         this.id = id;
         this.username = username;
         this.roles = roles;
@@ -56,11 +57,11 @@ public class Identity {
         this.passwordHash = passwordHash;
     }
 
-    public RoleName[] getRoles() {
+    public List<RoleName> getRoles() {
         return roles;
     }
 
-    public void setRoles(RoleName[] roles) {
+    public void setRoles(List<RoleName> roles) {
         this.roles = roles;
     }
 
