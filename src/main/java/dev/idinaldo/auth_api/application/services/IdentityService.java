@@ -1,9 +1,11 @@
 package dev.idinaldo.auth_api.application.services;
 
 import dev.idinaldo.auth_api.adapters.in.dtos.IdentityRequestDTO;
+import dev.idinaldo.auth_api.adapters.out.dtos.RefreshTokenResponseDTO;
 import dev.idinaldo.auth_api.adapters.out.dtos.RegisterResponseDTO;
-import dev.idinaldo.auth_api.adapters.out.dtos.SignInResponseDTO;
+import dev.idinaldo.auth_api.adapters.out.dtos.AccessTokenDTO;
 import dev.idinaldo.auth_api.application.usecases.ClientRegisterUseCase;
+import dev.idinaldo.auth_api.application.usecases.RefreshUseCase;
 import dev.idinaldo.auth_api.application.usecases.SignInUseCase;
 import dev.idinaldo.auth_api.domain.models.Identity;
 import dev.idinaldo.auth_api.ports.IdentityRepository;
@@ -14,10 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
-public class IdentityService implements ClientRegisterUseCase, SignInUseCase {
+public class IdentityService implements ClientRegisterUseCase, SignInUseCase, RefreshUseCase {
 
     private final IdentityRepository identityRepository;
     private final JwtGenerator jwtGenerator;
@@ -37,12 +37,24 @@ public class IdentityService implements ClientRegisterUseCase, SignInUseCase {
     }
 
     @Override
-    public SignInResponseDTO signIn(IdentityRequestDTO identityRequestDTO) throws BadRequestException {
+    public AccessTokenDTO signIn(IdentityRequestDTO identityRequestDTO) throws BadRequestException {
         Identity persistedIdentity = identityRepository.findByUsername(identityRequestDTO.username());
-        logger.debug("User found");
         if (passwordEncoder.matches(identityRequestDTO.password(), persistedIdentity.getPasswordHash())) {
-            logger.debug("PW matches");
-            return new SignInResponseDTO(this.jwtGenerator.generateToken(persistedIdentity));
+            return new AccessTokenDTO(this.jwtGenerator.generateToken(persistedIdentity));
         } else throw new BadRequestException(DEFAULT_ERROR_MESSAGE);
+    }
+
+    @Override
+    public RefreshTokenResponseDTO refreshToken(Identity identity) {
+
+        // verificar refresh token atual
+            // invalidar refresh token atual
+            // gerar novo access token
+            // gerar novo refresh token
+            // persistir novo refresh token
+            // retornar RefreshTokenResponseDTO
+        // retornar InvalidRefreshTokenException
+
+        return new RefreshTokenResponseDTO("AccessToken", "RefreshToken");
     }
 }
