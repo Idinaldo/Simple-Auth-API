@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import dev.idinaldo.auth_api.domain.models.Identity;
 import dev.idinaldo.auth_api.domain.valueObject.RoleName;
 import dev.idinaldo.auth_api.ports.JwtGenerator;
+import dev.idinaldo.auth_api.ports.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,11 @@ public class JwtGeneratorImpl implements JwtGenerator {
 
     @Value("${api.security.token.secret}")
     private String secret;
+    private final RandomStringGenerator randomStringGenerator;
+
+    public JwtGeneratorImpl(RandomStringGenerator randomStringGenerator) {
+        this.randomStringGenerator = randomStringGenerator;
+    }
 
     @Override
     public String generateToken(Identity identity) {
@@ -51,6 +57,12 @@ public class JwtGeneratorImpl implements JwtGenerator {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String generateRefreshToken() {
+        String token = this.randomStringGenerator.generateRandomString();
+        return "";
     }
 
     private Instant getExpirationDate() {
