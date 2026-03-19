@@ -7,4 +7,6 @@ import org.springframework.stereotype.Component;
 public interface JwtGenerator {
     String generateToken(Identity identity);
     String validateToken(String token);
+    // talvez adicionar algumas informações
+    String generateRefreshToken();
 }
