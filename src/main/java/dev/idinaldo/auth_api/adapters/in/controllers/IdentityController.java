@@ -2,7 +2,7 @@ package dev.idinaldo.auth_api.adapters.in.controllers;
 
 import dev.idinaldo.auth_api.adapters.in.dtos.IdentityRequestDTO;
 import dev.idinaldo.auth_api.adapters.out.dtos.RegisterResponseDTO;
-import dev.idinaldo.auth_api.adapters.out.dtos.SignInResponseDTO;
+import dev.idinaldo.auth_api.adapters.out.dtos.AccessTokenDTO;
 import dev.idinaldo.auth_api.application.services.IdentityService;
 import dev.idinaldo.auth_api.domain.models.Identity;
 import dev.idinaldo.auth_api.infrastructure.mappers.IdentityMapperFacade;
@@ -37,7 +37,12 @@ public class IdentityController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<SignInResponseDTO> signIn(@RequestBody @Valid IdentityRequestDTO identityRequestDTO) throws BadRequestException {
+    public ResponseEntity<AccessTokenDTO> signIn(@RequestBody @Valid IdentityRequestDTO identityRequestDTO) throws BadRequestException {
         return ResponseEntity.ok(this.identityService.signIn(identityRequestDTO));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<String> refresh() {
+        return ResponseEntity.ok(this.identityService.refresh());
     }
 }
